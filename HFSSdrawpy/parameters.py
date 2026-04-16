@@ -6,8 +6,19 @@
 
 
 # PARAMETERS FOR THE GDS OUTPUT AND FOR FILLETS
+# eps = 1e-7
+# DEFAULT = 0
+# TRACK = 1
+# GAP = 2
+# MASK = 3
+# RLC = 4
+# MESH = 5
+# PORT = 6
+# BOND = 7
+
+
 eps = 1e-7
-DEFAULT = 0
+DEFAULT = 433
 TRACK = 1
 GAP = 2
 MASK = 3
@@ -15,3 +26,5 @@ RLC = 4
 MESH = 5
 PORT = 6
 BOND = 7
+FINE_EXPOSURE = 8
+COARSE_EXPOSURE = 9
