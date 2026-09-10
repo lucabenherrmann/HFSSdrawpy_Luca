@@ -582,11 +582,7 @@ class HfssDesign(COMWrapper):
         )
 
     def set_variable(self, name, value, postprocessing=False):
-        if (
-            name
-            not in self._design.GetVariables()
-            + self._design.GetPostProcessingVariables()
-        ):
+        if name not in self.get_variable_names():
             self.create_variable(name, value, postprocessing=postprocessing)
         else:
             self._design.SetVariableValue(name, value)
@@ -595,16 +591,11 @@ class HfssDesign(COMWrapper):
         return self._design.GetVariableValue(name)
 
     def get_variable_names(self):
-        return [
-            s
-            for s in self._design.GetVariables()
-            + self._design.GetPostProcessingVariables()
-        ]
+        # GetVariables omits expressions that depend on intrinsics such as freq.
+        return list(self._design.GetProperties("LocalVariableTab", "LocalVariables"))
 
     def get_variables(self):
-        local_variables = (
-            self._design.GetVariables() + self._design.GetPostProcessingVariables()
-        )
+        local_variables = self.get_variable_names()
         return {lv: self.get_variable_value(lv) for lv in local_variables}
 
     def copy_design_variables(self, source_design):
