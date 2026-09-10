@@ -480,8 +480,6 @@ class Body(Modeler):
             # check that port is at the BEGINNING of the path (hfss only)
             ori = Vector(port.ori)
             pos = Vector(port.pos)
-            path_entity = self.polyline(points, closed=False, name=name)
-            path_entity.fillet(fillet)
 
             for ii in range(port.N):
                 offset = port.offsets[ii]
@@ -496,12 +494,15 @@ class Body(Modeler):
                     points_starter, closed=False, name=name + "_" + subname, layer=layer
                 )
                 path_name = name + "_" + subname + "_path"
-                current_path_entity = path_entity.copy(new_name=path_name)
+                # Rebuild the same sweep path instead of using HFSS Copy/Paste,
+                # which can intermittently fail when the clipboard is unavailable.
+                current_path_entity = self.polyline(
+                    points, closed=False, name=path_name
+                )
+                current_path_entity.fillet(fillet)
                 self.interface.sweep_along_path(entity, current_path_entity)
                 current_path_entity.delete()
                 model_entities.append(entity)
-
-            path_entity.delete()
 
         return model_entities
 
